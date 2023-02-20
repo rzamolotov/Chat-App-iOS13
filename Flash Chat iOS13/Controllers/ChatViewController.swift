@@ -7,19 +7,31 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ChatViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageTextfield: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "ChatApp"
+        navigationItem.hidesBackButton = true // спрятать кнопку назад
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
     }
     
-
+    @IBAction func logOutPressed(_ sender: UIBarButtonItem) {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            navigationController?.popToRootViewController(animated: true)// при нажатии на кнопку выхода выходим на главный экран
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+        
+        
+    }
 }
