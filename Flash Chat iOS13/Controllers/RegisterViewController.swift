@@ -25,7 +25,7 @@ class RegisterViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)//аллерт с ошибкой
                 } else {
                     // если нет ошибки мы отправляем пользователя в ChatViewController
-                    self.performSegue(withIdentifier: Constants.regesterSegue, sender: self)
+                    self.performSegue(withIdentifier: K.registerSegue, sender: self)
                 }
             }
             

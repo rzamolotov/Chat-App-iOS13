@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)// если неправильный парроль запускаем аллерт с ошибкой
                 } else {
                     // если нет ошибки мы отправляем пользователя в ChatViewController
-                    self.performSegue(withIdentifier: Constants.loginSegue, sender: self)
+                    self.performSegue(withIdentifier: K.loginSegue, sender: self)
                 }
             }
         }
