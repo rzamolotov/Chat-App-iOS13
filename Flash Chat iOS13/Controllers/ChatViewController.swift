@@ -50,11 +50,13 @@ class ChatViewController: UIViewController {
                     for document in snapshotDocumetns {
                         let data = document.data()
                         if let messageSender = data[K.FStore.senderField] as? String, let messageBody = data[K.FStore.bodyField] as? String {
-                            let newMessage = Message(srender: messageSender, body: messageBody)
+                            let newMessage = Message(sender: messageSender, body: messageBody)
                             self.messages.append(newMessage)//добавляем сообщения после обновления
                             
                             DispatchQueue.main.async {
                                 self.tableView.reloadData()//перезагружаем тейбл вью с новыми сообщениями
+                                let indexPath = IndexPath(row: self.messages.count - 1, section: 0) //номер ячейки к которому будем проеручивать весь список новостей(массив -1), секция - это номер секции
+                                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                             }
                         }
                     }
@@ -80,6 +82,9 @@ class ChatViewController: UIViewController {
                     self.present(alert, animated: true, completion: nil)// если не удалось сохранить сообщение запускаем аллерт с ошибкой
                 } else {
                     print("Succesfully saved data.")
+                    DispatchQueue.main.async {
+                        self.messageTextfield.text = "" //делаем строку отправки сообщения пустой если оно было успешно сохранено и отправлено
+                    }
                 }
             }
         }
@@ -102,8 +107,23 @@ extension ChatViewController: UITableViewDataSource {
     } //считаем количество ячеек в списке
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let message = messages[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! MessageCell
-        cell.lable.text = messages[indexPath.row].body //отображаем сообщения по номеру ячейки
+        cell.lable.text = message.body //отображаем сообщения по номеру ячейки
+        
+        //Если сообщение прихождит от текущего пользователся(отправителя)
+        if message.sender == Auth.auth().currentUser?.email {
+            cell.leftImageView.isHidden = false
+            cell.rightImageView.isHidden = true
+            cell.messageBuble.backgroundColor = UIColor(named: K.BrandColors.lightPurple)
+            cell.lable.textColor = UIColor(named: K.BrandColors.purple)
+        } else {  //Если сообщение прихождит от другого пользователся(получателя)
+            cell.leftImageView.isHidden = true
+            cell.rightImageView.isHidden = false
+            cell.messageBuble.backgroundColor = UIColor(named: K.BrandColors.purple)
+            cell.lable.textColor = UIColor(named: K.BrandColors.lightPurple)
+        }
+        
         return cell
     } //в какой конкретной ячейке должно отображаться сообщение
 }

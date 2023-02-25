@@ -13,9 +13,18 @@ class WelcomeViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true // прячем navigationbar
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        navigationController?.isNavigationBarHidden = false // восстанавливаем navigationbar, чобы он отображался на других листах
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         titleLabel.text = ""
         var charIndex = 0.0//переменная созданная для того чтобы можно было создать очередность запуска таймера
